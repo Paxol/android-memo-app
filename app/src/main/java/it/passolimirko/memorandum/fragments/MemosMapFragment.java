@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -116,8 +117,19 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
 		map.setOnInfoWindowClickListener(marker -> {
 			List<Memo> memosForPosition = memosGroupedByLatLon.get(marker.getPosition());
 			if (memosForPosition != null) {
-				// TODO: Open the list of memos
-				Log.i(TAG, "memosForPosition: " + memosForPosition.size());
+				if (memosForPosition.size() > 1) {
+                    // Show the list of memos at the location
+
+                    Bundle data = new Bundle();
+                    data.putString("mode", "memos-list");
+                    data.putParcelableArray("memos", memosForPosition.toArray(new Memo[0]));
+
+                    NavHostFragment.findNavController(MemosMapFragment.this)
+                            .navigate(R.id.action_MemosMapFragment_to_MemosListFragment, data);
+                } else {
+                    // TODO: Show the memo details
+                    Log.i(TAG, "Show the memo details");
+                }
 			}
 		});
 	}

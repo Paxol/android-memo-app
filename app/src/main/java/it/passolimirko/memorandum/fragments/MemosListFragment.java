@@ -2,6 +2,7 @@ package it.passolimirko.memorandum.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import it.passolimirko.memorandum.MainActivity;
 import it.passolimirko.memorandum.R;
@@ -86,27 +89,36 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         }
 
         // Tell the activity that and options menu is available
-        FragmentActivity activity = getActivity();
-        if (activity != null) activity.addMenuProvider(this);
+        addToolbarMenu();
     }
 
     private void setupDefault() {
         // Show active memos
         // The toolbar title is setted by the navigation graph
-        
+
         // Listen to room live data
         AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
-                memos -> {
-                    adapter.setMemos(memos);
-                    updateNoMemosMessageVisibility();
-                });
+                this::setMemosList);
     }
 
     private void setupWithArgs(@NonNull Bundle args) {
+        String title = getResources().getString(R.string.memos_list_fallback_title);
+
         switch (args.getString("mode")) {
             case "memos-list":
                 // The list of memos is passed within the bundle
-                // TODO: Get the list
+                // Convert the array
+                Parcelable[] parcelableArray = args.getParcelableArray("memos");
+                Memo[] resultArray = null;
+                if (parcelableArray != null) {
+                    resultArray = Arrays.copyOf(parcelableArray, parcelableArray.length, Memo[].class);
+                }
+
+                // Set the adapter's list
+                setMemosList(Arrays.asList(resultArray));
+
+                // Remove menu
+                removeToolbarMenu();
                 break;
 
             case "completed": // TODO: implement
@@ -120,7 +132,7 @@ public class MemosListFragment extends Fragment implements MenuProvider {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null && activity.getSupportActionBar() != null)
-            activity.getSupportActionBar().setTitle(R.string.memos_list_fallback_title);
+            activity.getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -128,8 +140,22 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         super.onDestroyView();
         binding = null;
 
+        removeToolbarMenu();
+    }
+
+    private void addToolbarMenu() {
+        FragmentActivity activity = getActivity();
+        if (activity != null) activity.addMenuProvider(this);
+    }
+
+    private void removeToolbarMenu() {
         FragmentActivity activity = getActivity();
         if (activity != null) activity.removeMenuProvider(this);
+    }
+
+    private void setMemosList(List<Memo> memos) {
+        adapter.setMemos(memos);
+        updateNoMemosMessageVisibility();
     }
 
     private void updateNoMemosMessageVisibility() {
