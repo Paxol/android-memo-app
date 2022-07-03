@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/ActiveMemosFragment"
-        android:name="it.passolimirko.memorandum.fragments.ActiveMemosFragment"
+        android:name="it.passolimirko.memorandum.fragments.MemosListFragment"
         android:label="@string/active_memos_fragment_label"
-        tools:layout="@layout/fragment_active_memos">
+        tools:layout="@layout/fragment_memos_list">
 
         <action
             android:id="@+id/action_ActiveMemosFragment_to_MemosMapFragment"
