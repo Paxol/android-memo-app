@@ -65,7 +65,7 @@ public class MemosListFragment extends Fragment implements MenuProvider {
             data.putParcelable(MemoDetailFragment.BUNDLE_MEMO_KEY, memo);
 
             NavHostFragment.findNavController(MemosListFragment.this)
-                    .navigate(R.id.action_ActiveMemosFragment_to_MemoDetailFragment, data);
+                    .navigate(R.id.action_MemosListFragment_to_MemoDetailFragment, data);
         });
 
         // Get the FAB from the activity
@@ -149,7 +149,7 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_showMemosInMap) {
             NavHostFragment.findNavController(MemosListFragment.this)
-                    .navigate(R.id.action_ActiveMemosFragment_to_MemosMapFragment);
+                    .navigate(R.id.action_MemosListFragment_to_MemosMapFragment);
             return true;
         }
 

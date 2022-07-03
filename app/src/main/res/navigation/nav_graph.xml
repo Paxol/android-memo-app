@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/ActiveMemosFragment">
+    app:startDestination="@id/MemosListFragment">
 
     <fragment
-        android:id="@+id/ActiveMemosFragment"
+        android:id="@+id/MemosListFragment"
         android:name="it.passolimirko.memorandum.fragments.MemosListFragment"
         android:label="@string/active_memos_fragment_label"
         tools:layout="@layout/fragment_memos_list">
 
         <action
-            android:id="@+id/action_ActiveMemosFragment_to_MemosMapFragment"
+            android:id="@+id/action_MemosListFragment_to_MemosMapFragment"
             app:destination="@id/MemosMapFragment" />
         <action
-            android:id="@+id/action_ActiveMemosFragment_to_MemoDetailFragment"
+            android:id="@+id/action_MemosListFragment_to_MemoDetailFragment"
             app:destination="@id/MemoDetailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -30,8 +30,8 @@
         tools:layout="@layout/fragment_memos_map">
 
         <action
-            android:id="@+id/action_MemosMapFragment_to_ActiveMemosFragment"
-            app:destination="@id/ActiveMemosFragment" />
+            android:id="@+id/action_MemosMapFragment_to_MemosListFragment"
+            app:destination="@id/MemosListFragment" />
     </fragment>
 
     <fragment
@@ -41,7 +41,7 @@
         tools:layout="@layout/fragment_memo_detail">
 
         <action
-            android:id="@+id/action_MemoDetailFragment_to_ActiveMemosFragment"
-            app:destination="@id/ActiveMemosFragment" />
+            android:id="@+id/action_MemoDetailFragment_to_MemosListFragment"
+            app:destination="@id/MemosListFragment" />
     </fragment>
 </navigation>
