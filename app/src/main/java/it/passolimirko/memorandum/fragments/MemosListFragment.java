@@ -1,7 +1,6 @@
 package it.passolimirko.memorandum.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -23,14 +22,14 @@ import java.util.ArrayList;
 
 import it.passolimirko.memorandum.MainActivity;
 import it.passolimirko.memorandum.R;
-import it.passolimirko.memorandum.databinding.FragmentActiveMemosBinding;
+import it.passolimirko.memorandum.databinding.FragmentMemosListBinding;
 import it.passolimirko.memorandum.room.AppDatabase;
 import it.passolimirko.memorandum.room.models.Memo;
 import it.passolimirko.memorandum.rw.MemoAdapter;
 
-public class ActiveMemosFragment extends Fragment implements MenuProvider {
+public class MemosListFragment extends Fragment implements MenuProvider {
 
-    private FragmentActiveMemosBinding binding;
+    private FragmentMemosListBinding binding;
     private MemoAdapter adapter;
 
     @SuppressLint("SimpleDateFormat") // TODO: Test only
@@ -39,8 +38,22 @@ public class ActiveMemosFragment extends Fragment implements MenuProvider {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = FragmentActiveMemosBinding.inflate(inflater, container, false);
+        binding = FragmentMemosListBinding.inflate(inflater, container, false);
 
+        // Setup the common things
+        commonSetup();
+
+        // Check if the fragment was created with arguments
+        if (getArguments() != null) {
+            setupWithArgs(getArguments());
+        } else {
+            setupDefault();
+        }
+
+        return binding.getRoot();
+    }
+
+    public void commonSetup() {
         // Setup recycler view
         adapter = new MemoAdapter(new ArrayList<>());
         binding.activeMemoRw.setAdapter(adapter);
@@ -51,16 +64,9 @@ public class ActiveMemosFragment extends Fragment implements MenuProvider {
             Bundle data = new Bundle();
             data.putParcelable(MemoDetailFragment.BUNDLE_MEMO_KEY, memo);
 
-            NavHostFragment.findNavController(ActiveMemosFragment.this)
-                    .navigate(R.id.action_ActiveMemosFragment_to_MemoDetailFragment, data);
+            NavHostFragment.findNavController(MemosListFragment.this)
+                    .navigate(R.id.action_MemosListFragment_to_MemoDetailFragment, data);
         });
-
-        // Listen to room live data
-        AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
-                memos -> {
-                    adapter.setMemos(memos);
-                    updateNoMemosMessageVisibility();
-                });
 
         // Get the FAB from the activity
         if (getActivity() instanceof MainActivity) {
@@ -79,10 +85,42 @@ public class ActiveMemosFragment extends Fragment implements MenuProvider {
             }).start());
         }
 
+        // Tell the activity that and options menu is available
         FragmentActivity activity = getActivity();
         if (activity != null) activity.addMenuProvider(this);
+    }
 
-        return binding.getRoot();
+    private void setupDefault() {
+        // Show active memos
+        // The toolbar title is setted by the navigation graph
+        
+        // Listen to room live data
+        AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
+                memos -> {
+                    adapter.setMemos(memos);
+                    updateNoMemosMessageVisibility();
+                });
+    }
+
+    private void setupWithArgs(@NonNull Bundle args) {
+        switch (args.getString("mode")) {
+            case "memos-list":
+                // The list of memos is passed within the bundle
+                // TODO: Get the list
+                break;
+
+            case "completed": // TODO: implement
+            case "expired": // TODO: implement
+
+            default:
+                // Fallback to setupDefault
+                setupDefault();
+                return;
+        }
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null)
+            activity.getSupportActionBar().setTitle(R.string.memos_list_fallback_title);
     }
 
     @Override
@@ -110,8 +148,8 @@ public class ActiveMemosFragment extends Fragment implements MenuProvider {
     @Override
     public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_showMemosInMap) {
-            NavHostFragment.findNavController(ActiveMemosFragment.this)
-                    .navigate(R.id.action_ActiveMemosFragment_to_MemosMapFragment);
+            NavHostFragment.findNavController(MemosListFragment.this)
+                    .navigate(R.id.action_MemosListFragment_to_MemosMapFragment);
             return true;
         }
 

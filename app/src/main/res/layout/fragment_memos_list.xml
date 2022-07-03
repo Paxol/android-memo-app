@@ -5,7 +5,7 @@
     android:id="@+id/memo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.passolimirko.memorandum.fragments.ActiveMemosFragment">
+    tools:context="it.passolimirko.memorandum.fragments.MemosListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/active_memo_rw"
