@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
+
+    <TextView
+        android:id="@+id/memo_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:text="Titolo memo" />
+
+    <TextView
+        android:id="@+id/memo_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memo_title"
+
+        tools:text="Descrizione memo" />
+
+    <ImageView
+        android:id="@+id/memo_calendar_icon"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+
+        android:src="@drawable/ic_calendar_white_24dp"
+        app:tint="?attr/colorOnSurface"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/memo_expire"
+        app:layout_constraintBottom_toBottomOf="@id/memo_expire" />
+
+    <TextView
+        android:id="@+id/memo_expire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
+        android:gravity="center"
+
+        app:layout_constraintTop_toBottomOf="@id/memo_desc"
+        app:layout_constraintStart_toEndOf="@id/memo_calendar_icon"
+
+        tools:text="10/06/2022 10:30" />
+
+    <ImageView
+        android:id="@+id/memo_poi_icon"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+
+        android:src="@drawable/ic_poi_white_24dp"
+        app:tint="?attr/colorOnSurface"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/memo_location"
+        app:layout_constraintBottom_toBottomOf="@id/memo_location" />
+
+    <TextView
+        android:id="@+id/memo_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
+        android:gravity="center"
+
+        app:layout_constraintTop_toBottomOf="@id/memo_expire"
+        app:layout_constraintStart_toEndOf="@id/memo_poi_icon"
+
+        tools:text="Nome luogo o coordinate" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

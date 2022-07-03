@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ActiveMemosFragment">
+
+    <fragment
+        android:id="@+id/ActiveMemosFragment"
+        android:name="it.passolimirko.memorandum.fragments.ActiveMemosFragment"
+        android:label="@string/active_memos_fragment_label"
+        tools:layout="@layout/fragment_active_memos">
+
+        <action
+            android:id="@+id/action_ActiveMemosFragment_to_MemosMapFragment"
+            app:destination="@id/MemosMapFragment" />
+        <action
+            android:id="@+id/action_ActiveMemosFragment_to_MemoDetailFragment"
+            app:destination="@id/MemoDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/MemosMapFragment"
+        android:name="it.passolimirko.memorandum.fragments.MemosMapFragment"
+        android:label="@string/memos_map_fragment_label"
+        tools:layout="@layout/fragment_memos_map">
+
+        <action
+            android:id="@+id/action_MemosMapFragment_to_ActiveMemosFragment"
+            app:destination="@id/ActiveMemosFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/MemoDetailFragment"
+        android:name="it.passolimirko.memorandum.fragments.MemoDetailFragment"
+        android:label="@string/memo_detail_fragment_label"
+        tools:layout="@layout/fragment_memo_detail">
+
+        <action
+            android:id="@+id/action_MemoDetailFragment_to_ActiveMemosFragment"
+            app:destination="@id/ActiveMemosFragment" />
+    </fragment>
+</navigation>

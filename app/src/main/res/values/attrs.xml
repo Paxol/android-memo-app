@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Theme">
+        <attr name="colorInversePrimary" format="color|reference" />
+        <attr name="colorShadow" format="color|reference" />
+        <attr name="fragmentAnimationDuration" format="integer" />
+    </declare-styleable>
+</resources>
