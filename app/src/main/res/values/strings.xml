@@ -14,4 +14,5 @@
     <string name="memos_map_fragment_label">Mappa promemoria</string>
     <string name="no_active_memo">Non ci sono promemoria attivi\nAggingine uno</string>
     <string name="memo_detail_fragment_label">Promemoria</string>
+    <string name="memos_list_fallback_title">Promemoria</string>
 </resources>

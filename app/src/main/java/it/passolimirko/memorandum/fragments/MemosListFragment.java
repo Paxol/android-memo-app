@@ -115,11 +115,12 @@ public class MemosListFragment extends Fragment implements MenuProvider {
             default:
                 // Fallback to setupDefault
                 setupDefault();
+                return;
         }
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null && activity.getSupportActionBar() != null)
-            activity.getSupportActionBar().setTitle("your title");
+            activity.getSupportActionBar().setTitle(R.string.memos_list_fallback_title);
     }
 
     @Override
