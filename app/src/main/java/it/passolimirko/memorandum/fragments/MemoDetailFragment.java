@@ -9,12 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.text.DateFormat;
 
+import it.passolimirko.memorandum.R;
 import it.passolimirko.memorandum.databinding.FragmentMemoDetailBinding;
 import it.passolimirko.memorandum.room.models.Memo;
 
-public class MemoDetailFragment extends Fragment {
+public class MemoDetailFragment extends Fragment implements OnMapReadyCallback {
 
     public static final String BUNDLE_MEMO_KEY = "memo";
 
@@ -39,6 +47,11 @@ public class MemoDetailFragment extends Fragment {
             binding.memoLocation.setText(memo.latitude + " " + memo.longitude);
         }
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.memo_map);
+
+        if (mapFragment != null)
+            mapFragment.getMapAsync(this);
+
         return binding.getRoot();
     }
 
@@ -48,4 +61,14 @@ public class MemoDetailFragment extends Fragment {
         binding = null;
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        LatLng position = new LatLng(memo.latitude, memo.longitude);
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(position);
+
+        googleMap.addMarker(markerOptions);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 13));
+    }
 }
