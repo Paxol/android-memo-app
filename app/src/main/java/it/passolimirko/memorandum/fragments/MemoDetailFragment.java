@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,7 +43,11 @@ public class MemoDetailFragment extends Fragment implements OnMapReadyCallback {
             binding.memoTitle.setText(memo.title);
             binding.memoDesc.setText(memo.content);
             binding.memoExpire.setText(DateFormat.getDateTimeInstance().format(memo.date));
-            binding.memoLocation.setText(memo.latitude + " " + memo.longitude);
+
+            if (memo.location != null && !memo.location.isEmpty())
+                binding.memoLocation.setText(memo.location);
+            else
+                binding.memoLocation.setText(memo.latitude + " " + memo.longitude);
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.memo_map);

@@ -18,14 +18,8 @@ import it.passolimirko.memorandum.room.models.Memo;
 
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
-    @FunctionalInterface
-    public interface OnMemoClickListener {
-        void onClick(Memo memo);
-    }
-
     private final List<Memo> memos;
     private OnMemoClickListener memoClickListener;
-
     public MemoAdapter(List<Memo> memos) {
         this.memos = memos;
     }
@@ -75,7 +69,11 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
         holder.tvTitle.setText(memo.title);
         holder.tvDescription.setText(memo.content);
         holder.tvExpiration.setText(DateFormat.getDateTimeInstance().format(memo.date));
-        holder.tvLocation.setText(memo.latitude + " " + memo.longitude);
+
+        if (memo.location != null && !memo.location.isEmpty())
+            holder.tvLocation.setText(memo.location);
+        else
+            holder.tvLocation.setText(memo.latitude + " " + memo.longitude);
 
         // Setup click listener
         holder.itemView.setOnClickListener((View v) -> {
@@ -92,6 +90,11 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
     @Override
     public long getItemId(int position) {
         return memos.get(position).id;
+    }
+
+    @FunctionalInterface
+    public interface OnMemoClickListener {
+        void onClick(Memo memo);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

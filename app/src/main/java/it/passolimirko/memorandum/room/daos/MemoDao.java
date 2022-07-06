@@ -8,7 +8,6 @@ import androidx.room.Query;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.util.Date;
 import java.util.List;
 
 import it.passolimirko.memorandum.room.models.Memo;
@@ -16,7 +15,7 @@ import it.passolimirko.memorandum.room.models.Memo;
 @Dao
 public interface MemoDao {
     @Insert
-    void insertAll(Memo...memos);
+    void insertAll(Memo... memos);
 
     @Delete
     void delete(Memo memo);
@@ -35,4 +34,7 @@ public interface MemoDao {
 
     @Query("SELECT * FROM memo WHERE status = 1 ORDER BY date DESC")
     LiveData<List<Memo>> getCompleted();
+
+    @Query("UPDATE memo SET location=:location WHERE id = :id")
+    ListenableFuture<Integer> updateLocation(Integer id, String location);
 }

@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import it.passolimirko.memorandum.databinding.FragmentMemosListBinding;
 import it.passolimirko.memorandum.room.AppDatabase;
 import it.passolimirko.memorandum.room.models.Memo;
 import it.passolimirko.memorandum.rw.MemoAdapter;
+import it.passolimirko.memorandum.utils.MemoUtils;
 
 public class MemosListFragment extends Fragment implements MenuProvider {
 
@@ -154,6 +156,17 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     }
 
     private void setMemosList(List<Memo> memos) {
+        try {
+            boolean updated = MemoUtils.checkLocation(memos, getContext());
+
+            if (updated)
+                for (Memo m : memos) {
+                    AppDatabase.getInstance(getContext()).memoDao().updateLocation(m.id, m.location);
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         adapter.setMemos(memos);
         updateNoMemosMessageVisibility();
     }
