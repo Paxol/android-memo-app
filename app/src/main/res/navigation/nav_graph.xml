@@ -44,4 +44,30 @@
             android:id="@+id/action_MemoDetailFragment_to_MemosListFragment"
             app:destination="@id/MemosListFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/AddMemoFragment"
+        android:name="it.passolimirko.memorandum.fragments.AddMemoFragment"
+        android:label="@string/add_memo_fragment_label"
+        tools:layout="@layout/fragment_add_memo">
+
+        <action
+            android:id="@+id/action_AddMemoFragment_to_ChooseFromMapFragment"
+            app:destination="@+id/ChooseFromMapFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChooseFromMapFragment"
+        android:name="it.passolimirko.memorandum.fragments.ChooseFromMapFragment"
+        android:label="@string/choose_from_map"
+        tools:layout="@layout/fragment_choose_from_map" />
+
+    <action
+        android:id="@+id/To_AddMemoFragment"
+        app:destination="@id/AddMemoFragment" />
+
 </navigation>

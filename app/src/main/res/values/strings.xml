@@ -15,4 +15,15 @@
     <string name="no_active_memo">Non ci sono promemoria attivi\nAggingine uno</string>
     <string name="memo_detail_fragment_label">Promemoria</string>
     <string name="memos_list_fallback_title">Promemoria</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_memo_title">Titolo</string>
+    <string name="label_memo_desc">Descrizione</string>
+    <string name="add_memo_fragment_label">Aggiungi promemoria</string>
+    <string name="label_memo_date_time">Scadenza</string>
+    <string name="edit">Modifica</string>
+    <string name="place">Luogo</string>
+    <string name="search">Cerca</string>
+    <string name="choose_from_map">Scegli dalla mappa</string>
+    <string name="select">Seleziona</string>
 </resources>
