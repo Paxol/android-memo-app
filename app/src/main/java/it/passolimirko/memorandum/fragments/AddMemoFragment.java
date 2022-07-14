@@ -163,6 +163,12 @@ public class AddMemoFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     private void setSelectedPosition(LatLng position) {
         String location = null;
         try {

@@ -107,4 +107,11 @@ public class SearchResultsBottomSheetFragment extends BottomSheetDialogFragment 
 
         return binding.getRoot();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 }

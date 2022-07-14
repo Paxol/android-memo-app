@@ -105,6 +105,12 @@ public class ChooseFromMapFragment extends Fragment implements OnMapReadyCallbac
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
 
