@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,14 +67,27 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Memo memo = memos.get(position);
 
+        // Mandatory fields first
         holder.tvTitle.setText(memo.title);
-        holder.tvDescription.setText(memo.content);
         holder.tvExpiration.setText(DateFormat.getDateTimeInstance().format(memo.date));
 
+        // Set description if exists
+        if (memo.content == null || memo.content.isEmpty()) holder.tvDescription.setVisibility(View.GONE);
+        else holder.tvDescription.setText(memo.content);
+
+        // Location => string associated to lat and lng
         if (memo.location != null && !memo.location.isEmpty())
             holder.tvLocation.setText(memo.location);
-        else
-            holder.tvLocation.setText(memo.latitude + " " + memo.longitude);
+        else {
+            // No location name, check if there is lat and lng
+            if (memo.latitude != null && memo.longitude != null)
+                holder.tvLocation.setText(memo.latitude + " " + memo.longitude);
+            else {
+                // No location, hide location icon and text view
+                holder.tvLocation.setVisibility(View.GONE);
+                holder.icLocation.setVisibility(View.GONE);
+            }
+        }
 
         // Setup click listener
         holder.itemView.setOnClickListener((View v) -> {
@@ -104,6 +118,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
         private final TextView tvExpiration;
         private final TextView tvLocation;
 
+        private final ImageView icLocation;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -111,6 +127,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
             tvDescription = itemView.findViewById(R.id.memo_desc);
             tvExpiration = itemView.findViewById(R.id.memo_expire);
             tvLocation = itemView.findViewById(R.id.memo_location);
+
+            icLocation = itemView.findViewById(R.id.memo_poi_icon);
         }
     }
 

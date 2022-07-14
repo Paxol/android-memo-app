@@ -29,95 +29,95 @@ import it.passolimirko.memorandum.room.AppDatabase;
 import it.passolimirko.memorandum.room.models.Memo;
 
 public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
-	private static final String TAG = "MemosMapFragment";
+    private static final String TAG = "MemosMapFragment";
+    private final Map<LatLng, List<Memo>> memosGroupedByLatLon = new HashMap<>();
+    private FragmentMemosMapBinding binding;
+    private GoogleMap map;
 
-	private FragmentMemosMapBinding binding;
-	private GoogleMap map;
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState
+    ) {
+        binding = FragmentMemosMapBinding.inflate(inflater, container, false);
 
-	private final Map<LatLng, List<Memo>> memosGroupedByLatLon = new HashMap<>();
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
-	@Override
-	public View onCreateView(
-					@NonNull LayoutInflater inflater, ViewGroup container,
-					Bundle savedInstanceState
-	) {
-		binding = FragmentMemosMapBinding.inflate(inflater, container, false);
+        if (mapFragment != null)
+            mapFragment.getMapAsync(this);
 
-		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        return binding.getRoot();
+    }
 
-		if (mapFragment != null)
-			mapFragment.getMapAsync(this);
+    private void setMemosMap(List<Memo> memos) {
+        memosGroupedByLatLon.clear();
 
-		return binding.getRoot();
-	}
+        for (Memo m : memos) {
+            if (m.latitude == null || m.longitude == null) continue;
 
-	private void setMemosMap(List<Memo> memos) {
-		memosGroupedByLatLon.clear();
+            LatLng location = new LatLng(m.latitude, m.longitude);
+            List<Memo> memosList = memosGroupedByLatLon.get(location);
 
-		for (Memo m : memos) {
-			LatLng location = new LatLng(m.latitude, m.longitude);
-			List<Memo> memosList = memosGroupedByLatLon.get(location);
+            if (memosList != null) {
+                memosList.add(m);
+            } else {
+                memosList = new ArrayList<>();
+                memosList.add(m);
 
-			if (memosList != null) {
-				memosList.add(m);
-			} else {
-				memosList = new ArrayList<>();
-				memosList.add(m);
+                memosGroupedByLatLon.put(location, memosList);
+            }
+        }
+    }
 
-				memosGroupedByLatLon.put(location, memosList);
-			}
-		}
-	}
+    private void updateMarkers() {
+        if (map != null) {
+            map.clear();
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-	private void updateMarkers() {
-		if (map != null) {
-			map.clear();
-			LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (Map.Entry<LatLng, List<Memo>> entry : memosGroupedByLatLon.entrySet()) {
+                LatLng location = entry.getKey();
+                List<Memo> memos = entry.getValue();
 
-			for (Map.Entry<LatLng, List<Memo>> entry : memosGroupedByLatLon.entrySet()) {
-				LatLng location = entry.getKey();
-				List<Memo> memos = entry.getValue();
+                MarkerOptions markerOptions = new MarkerOptions();
 
-				MarkerOptions markerOptions = new MarkerOptions();
+                if (memos.size() > 1)
+                    markerOptions.title(memos.size() + " promemoria");
+                else
+                    markerOptions.title(memos.get(0).title);
 
-				if (memos.size() > 1)
-					markerOptions.title(memos.size() + " promemoria");
-				else
-				markerOptions.title(memos.get(0).title);
+                markerOptions.snippet("Dettagli");
+                markerOptions.position(location);
 
-				markerOptions.snippet("Dettagli");
-				markerOptions.position(location);
+                map.addMarker(markerOptions);
+                builder.include(location);
+            }
 
-				map.addMarker(markerOptions);
-				builder.include(location);
-			}
+            if (!memosGroupedByLatLon.isEmpty())
+                map.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+        }
+    }
 
-			if (!memosGroupedByLatLon.isEmpty())
-				map.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
-		}
-	}
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		binding = null;
-	}
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
 
-	@Override
-	public void onMapReady(@NonNull GoogleMap googleMap) {
-		map = googleMap;
+        // Listen to room live data
+        AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
+                memos -> {
+                    setMemosMap(memos);
+                    updateMarkers();
+                });
 
-		// Listen to room live data
-		AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
-						memos -> {
-							setMemosMap(memos);
-							updateMarkers();
-						});
-
-		map.setOnInfoWindowClickListener(marker -> {
-			List<Memo> memosForPosition = memosGroupedByLatLon.get(marker.getPosition());
-			if (memosForPosition != null) {
-				if (memosForPosition.size() > 1) {
+        map.setOnInfoWindowClickListener(marker -> {
+            List<Memo> memosForPosition = memosGroupedByLatLon.get(marker.getPosition());
+            if (memosForPosition != null) {
+                if (memosForPosition.size() > 1) {
                     // Show the list of memos at the location
 
                     Bundle data = new Bundle();
@@ -130,7 +130,7 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
                     // TODO: Show the memo details
                     Log.i(TAG, "Show the memo details");
                 }
-			}
-		});
-	}
+            }
+        });
+    }
 }

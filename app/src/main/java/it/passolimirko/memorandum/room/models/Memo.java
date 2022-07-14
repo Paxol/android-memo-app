@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 public class Memo implements Parcelable {
     public static final int STATUS_ACTIVE = 0;
     public static final int STATUS_COMPLETED = 1;
+
     public static final Creator<Memo> CREATOR = new Creator<Memo>() {
         @Override
         public Memo createFromParcel(Parcel in) {
@@ -27,16 +29,17 @@ public class Memo implements Parcelable {
             return new Memo[size];
         }
     };
+
     @PrimaryKey(autoGenerate = true)
     public int id;
     @ColumnInfo(name = "title")
     public String title;
     @ColumnInfo(name = "content")
     public String content;
-    @ColumnInfo(name = "latitude", defaultValue = "200")
-    public double latitude;
-    @ColumnInfo(name = "longitude", defaultValue = "200")
-    public double longitude;
+    @ColumnInfo(name = "latitude", defaultValue = "'NULL'")
+    public Double latitude;
+    @ColumnInfo(name = "longitude", defaultValue = "'NULL'")
+    public Double longitude;
     @ColumnInfo(name = "location")
     public String location;
     @ColumnInfo(name = "date")
@@ -47,11 +50,16 @@ public class Memo implements Parcelable {
     public Memo() {
     }
 
-    public Memo(String title, String content, double latitude, double longitude, Date date, int status) {
+    public Memo(String title, String content, Double latitude, Double longitude, Date date, int status) {
+        this(title, content, latitude, longitude, null, date, status);
+    }
+
+    public Memo(String title, String content, Double latitude, Double longitude, String location, Date date, int status) {
         this.title = title;
         this.content = content;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.location = location;
         this.date = date;
         this.status = status;
     }

@@ -12,7 +12,9 @@ public class MemoUtils {
         boolean updated = false;
 
         if (m.location == null || m.location.isEmpty()) {
-            String loc = Geocoding.getAddressForLocation(m.latitude, m.longitude, context);
+            if (m.latitude == null || m.longitude == null) return updated;
+
+            String loc = Geocoding.getAddressForPosition(m.latitude, m.longitude, context);
             m.location = loc;
 
             if (loc != null && !loc.isEmpty())

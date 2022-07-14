@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -32,6 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tf_title">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine" />
@@ -51,10 +53,11 @@
         app:layout_constraintTop_toBottomOf="@+id/tf_desc">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tf_date_time_el"
+            android:id="@+id/et_date_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:editable="false"/>
+            android:editable="false"
+            tools:ignore="Deprecated" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -90,6 +93,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_place">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_place"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -99,9 +103,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:enabled="false"
         android:text="@string/search"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tf_place"
 
+        app:layout_constraintBaseline_toBaselineOf="@+id/tf_place"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
