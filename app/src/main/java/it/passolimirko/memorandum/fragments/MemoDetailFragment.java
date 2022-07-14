@@ -1,5 +1,6 @@
 package it.passolimirko.memorandum.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +30,7 @@ public class MemoDetailFragment extends Fragment implements OnMapReadyCallback {
 
     private Memo memo;
 
+    @SuppressLint("DefaultLocale")
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -41,18 +42,47 @@ public class MemoDetailFragment extends Fragment implements OnMapReadyCallback {
             memo = getArguments().getParcelable(BUNDLE_MEMO_KEY);
 
         if (memo != null) {
+            // Mandatory fields first
             binding.memoTitle.setText(memo.title);
-            binding.memoDesc.setText(memo.content);
             binding.memoExpire.setText(DateFormat.getDateTimeInstance().format(memo.date));
-            binding.memoLocation.setText(memo.latitude + " " + memo.longitude);
+            
+            // Set description if exists
+            if (memo.content == null || memo.content.isEmpty())
+                binding.memoDesc.setVisibility(View.GONE);
+            else binding.memoDesc.setText(memo.content);
+
+            // Location => string associated to lat and lng
+            if (memo.location != null && !memo.location.isEmpty())
+                binding.memoLocation.setText(memo.location);
+            else {
+                // No location name, check if there is lat and lng
+                if (memo.latitude != null && memo.longitude != null) {
+                    binding.memoLocation.setText(String.format("%.7f, %.7f", memo.latitude, memo.longitude));
+                } else {
+                    // No location, hide location icon and text view
+                    binding.memoLocation.setVisibility(View.GONE);
+                    binding.memoPoiIcon.setVisibility(View.GONE);
+                }
+            }
+
+            if (memo.latitude != null && memo.longitude != null)
+                setupMap();
+            else
+                // Hide map
+                binding.memoMapContainer.setVisibility(View.GONE);
+
+        } else {
+            throw new IllegalArgumentException("No Memo given");
         }
 
+        return binding.getRoot();
+    }
+
+    private void setupMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.memo_map);
 
         if (mapFragment != null)
             mapFragment.getMapAsync(this);
-
-        return binding.getRoot();
     }
 
     @Override

@@ -15,10 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,7 @@ import it.passolimirko.memorandum.databinding.FragmentMemosListBinding;
 import it.passolimirko.memorandum.room.AppDatabase;
 import it.passolimirko.memorandum.room.models.Memo;
 import it.passolimirko.memorandum.rw.MemoAdapter;
+import it.passolimirko.memorandum.utils.MemoUtils;
 
 public class MemosListFragment extends Fragment implements MenuProvider {
 
@@ -75,17 +77,10 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
 
-            mainActivity.setFabOnClickListener((View v) -> new Thread(() -> {
-                // TODO: Test only
-                try {
-                    AppDatabase.getInstance(getContext()).memoDao().insertAll(
-                            new Memo("Fare lavatrice", "Capi bianchi e colorati", 45, 9, new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2022-07-12 10:30"), Memo.STATUS_ACTIVE),
-                            new Memo("Cucinare", "Pasta aglio oglio e peperoncino", 45, 9, new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2022-07-01 12:30"), Memo.STATUS_ACTIVE),
-                            new Memo("Veterinario", "Portare black dal veterinario", 45, 10, new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2022-07-20 15:15"), Memo.STATUS_ACTIVE)
-                    );
-                } catch (Exception ignored) {
-                }
-            }).start());
+            mainActivity.setFabOnClickListener((View v) ->
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main)
+                            .navigate(R.id.To_AddMemoFragment)
+            );
         }
 
         // Tell the activity that and options menu is available
@@ -154,6 +149,17 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     }
 
     private void setMemosList(List<Memo> memos) {
+        try {
+            boolean updated = MemoUtils.checkLocation(memos, getContext());
+
+            if (updated)
+                for (Memo m : memos) {
+                    AppDatabase.getInstance(getContext()).memoDao().updateLocation(m.id, m.location);
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         adapter.setMemos(memos);
         updateNoMemosMessageVisibility();
     }

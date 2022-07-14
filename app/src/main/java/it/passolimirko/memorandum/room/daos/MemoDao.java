@@ -4,22 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import it.passolimirko.memorandum.room.models.Memo;
 
 @Dao
 public interface MemoDao {
     @Insert
-    void insertAll(Memo...memos);
+    ListenableFuture<Long[]> insertAll(Memo ...memo);
 
     @Delete
-    void delete(Memo memo);
+    ListenableFuture<Integer> delete(Memo memo);
 
     @Query("DELETE FROM memo")
     ListenableFuture<Integer> deleteAll();
@@ -35,4 +36,7 @@ public interface MemoDao {
 
     @Query("SELECT * FROM memo WHERE status = 1 ORDER BY date DESC")
     LiveData<List<Memo>> getCompleted();
+
+    @Query("UPDATE memo SET location=:location WHERE id = :id")
+    ListenableFuture<Integer> updateLocation(Integer id, String location);
 }
