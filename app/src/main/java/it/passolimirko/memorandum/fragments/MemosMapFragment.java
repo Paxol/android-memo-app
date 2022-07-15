@@ -29,7 +29,11 @@ import it.passolimirko.memorandum.room.models.Memo;
 
 public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = "MemosMapFragment";
+
     private final Map<LatLng, List<Memo>> memosGroupedByLatLon = new HashMap<>();
+
+    private boolean mapInitialized = false;
+
     private FragmentMemosMapBinding binding;
     private GoogleMap map;
 
@@ -91,8 +95,24 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
                 builder.include(location);
             }
 
-            if (!memosGroupedByLatLon.isEmpty())
-                map.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+            if (!memosGroupedByLatLon.isEmpty()) {
+                // Set max zoom to prevent too much zoom
+                map.setMaxZoomPreference(14);
+
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100), new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onCancel() {
+                        // Revert max zoom so the user can zoom in
+                        map.resetMinMaxZoomPreference();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        // Revert max zoom so the user can zoom in
+                        map.resetMinMaxZoomPreference();
+                    }
+                });
+            }
         }
     }
 
@@ -105,6 +125,8 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
+
+        if (mapInitialized) return;
 
         // Listen to room live data
         AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
@@ -136,5 +158,7 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
+        mapInitialized = true;
     }
 }
