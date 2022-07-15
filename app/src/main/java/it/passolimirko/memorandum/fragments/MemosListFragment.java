@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,6 +42,7 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     public static final int MODE_EXPIRED = 3;
 
     private int selectedMode = -1;
+    private LiveData<List<Memo>> currentObserver = null;
 
     private FragmentMemosListBinding binding;
     private MemoAdapter adapter;
@@ -59,7 +62,8 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         if (getArguments() != null) {
             setupWithArgs(getArguments());
         } else {
-            setupDefault();
+            selectedMode = MODE_ACTIVE;
+            setup(null);
         }
 
         return binding.getRoot();
@@ -94,28 +98,34 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         addToolbarMenu();
     }
 
-    private void setupDefault() {
-        // Show active memos
-        selectedMode = MODE_ACTIVE;
+    private void setLiveDataObserver(LiveData<List<Memo>> newObserver) {
+        if (currentObserver != null) {
+            currentObserver.removeObservers(getViewLifecycleOwner());
+        }
 
-        // The toolbar title is setted by the navigation graph
+        currentObserver = newObserver;
 
         // Listen to room live data
-        AppDatabase.getInstance(requireContext()).memoDao().getActive().observe(getViewLifecycleOwner(),
-                this::setMemosList);
+        newObserver.observe(getViewLifecycleOwner(), this::setMemosList);
     }
 
     private void setupWithArgs(@NonNull Bundle args) {
-        String title = getResources().getString(R.string.memos_list_fallback_title);
-
         selectedMode = args.getInt("mode");
 
+        setup(args);
+    }
+
+    private void setup(@Nullable Bundle args) {
         // Gat activity to access toolbar
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        String title = getResources().getString(R.string.memos_list_fallback_title);
 
         switch (selectedMode) {
             case MODE_LIST:
                 // The list of memos is passed within the bundle
+                if (args == null) throw new IllegalArgumentException("Bundle args cannot be null in list mode");
+
                 // Convert the array
                 Parcelable[] parcelableArray = args.getParcelableArray("memos");
                 Memo[] resultArray = null;
@@ -134,14 +144,24 @@ public class MemosListFragment extends Fragment implements MenuProvider {
                     activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 break;
 
-            case MODE_COMPLETED: // TODO: implement
-            case MODE_EXPIRED: // TODO: implement
+            case MODE_COMPLETED:
+                setLiveDataObserver(AppDatabase.getInstance(getContext()).memoDao().getCompleted());
+                title = getString(R.string.completed_memos);
+                break;
+
+            case MODE_EXPIRED:
+                setLiveDataObserver(AppDatabase.getInstance(getContext()).memoDao().getExpired());
+                title = getString(R.string.expired_memos);
+                break;
 
             case MODE_ACTIVE:
             default:
-                // Fallback to setupDefault
-                setupDefault();
-                return;
+                // Set to the correct value in case of default
+                selectedMode = MODE_ACTIVE;
+
+                setLiveDataObserver(AppDatabase.getInstance(getContext()).memoDao().getActive());
+                title = getString(R.string.active_memos_fragment_label);
+                break;
         }
 
         // Change toolbar title
@@ -216,6 +236,31 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         if (menuItem.getItemId() == R.id.action_showMemosInMap) {
             NavHostFragment.findNavController(MemosListFragment.this)
                     .navigate(R.id.action_MemosListFragment_to_MemosMapFragment);
+            return true;
+        }
+
+        boolean invaliateMenu = false;
+
+        if (menuItem.getItemId() == R.id.action_showActiveMemos) {
+            // Show active memos
+            selectedMode = MODE_ACTIVE;
+            setup(null);
+            invaliateMenu = true;
+        } else if (menuItem.getItemId() == R.id.action_showCompletedMemos) {
+            // Show completed memos
+            selectedMode = MODE_COMPLETED;
+            setup(null);
+            invaliateMenu = true;
+        } else if (menuItem.getItemId() == R.id.action_showExpiredMemos) {
+            // Show expired memos
+            selectedMode = MODE_EXPIRED;
+            setup(null);
+            invaliateMenu = true;
+        }
+
+        if (invaliateMenu) {
+            if (getActivity() != null) getActivity().invalidateMenu();
+
             return true;
         }
 
