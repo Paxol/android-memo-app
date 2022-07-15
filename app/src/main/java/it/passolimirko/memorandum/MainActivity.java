@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.color.DynamicColors;
+import com.google.android.material.snackbar.Snackbar;
 
 import it.passolimirko.memorandum.databinding.ActivityMainBinding;
 import it.passolimirko.memorandum.room.AppDatabase;
@@ -108,5 +109,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    public Snackbar makeSnackbar(int resId, int length) {
+        return Snackbar.make(binding.getRoot(), resId, length);
     }
 }

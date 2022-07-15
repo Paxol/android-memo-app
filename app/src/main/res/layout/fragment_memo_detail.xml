@@ -22,9 +22,9 @@
         android:id="@+id/memo_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-
         android:layout_marginTop="4dp"
+
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/memo_title"
 
@@ -36,25 +36,25 @@
         android:layout_height="14dp"
 
         android:src="@drawable/ic_calendar_white_24dp"
-        app:tint="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="@id/memo_expire"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/memo_expire"
-        app:layout_constraintBottom_toBottomOf="@id/memo_expire"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/memo_expire"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_marginStart="4dp"
 
         android:layout_marginTop="8dp"
-        android:layout_marginStart="4dp"
         android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
 
-        app:layout_constraintTop_toBottomOf="@id/memo_desc"
         app:layout_constraintStart_toEndOf="@id/memo_calendar_icon"
+        app:layout_constraintTop_toBottomOf="@id/memo_desc"
 
         tools:text="10/06/2022 10:30" />
 
@@ -64,27 +64,41 @@
         android:layout_height="14dp"
 
         android:src="@drawable/ic_poi_white_24dp"
-        app:tint="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="@id/memo_location"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/memo_location"
-        app:layout_constraintBottom_toBottomOf="@id/memo_location"
+        app:tint="?attr/colorOnSurface"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/memo_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_marginStart="4dp"
 
         android:layout_marginTop="8dp"
-        android:layout_marginStart="4dp"
         android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
 
-        app:layout_constraintTop_toBottomOf="@id/memo_expire"
         app:layout_constraintStart_toEndOf="@id/memo_poi_icon"
+        app:layout_constraintTop_toBottomOf="@id/memo_expire"
 
         tools:text="Nome luogo o coordinate" />
+
+    <TextView
+        android:id="@+id/memo_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memo_location"
+
+        tools:text="Attivo" />
 
     <LinearLayout
         android:id="@+id/memo_map_container"
@@ -92,9 +106,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/memo_location"
-        app:layout_constraintBottom_toBottomOf="parent">
-
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/memo_btn_delete"
+        app:layout_constraintTop_toBottomOf="@id/memo_status">
 
         <fragment
             android:id="@+id/memo_map"
@@ -103,8 +117,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:ignore="FragmentTagUsage" />
-
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/memo_btn_delete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/delete"
+        style="?attr/materialButtonOutlinedStyle"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/memo_btn_complete" />
+
+    <Button
+        android:id="@+id/memo_btn_complete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+
+        android:text="@string/mark_complete"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/memo_btn_delete"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

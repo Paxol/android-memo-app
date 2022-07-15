@@ -39,4 +39,7 @@ public interface MemoDao {
 
     @Query("UPDATE memo SET location=:location WHERE id = :id")
     ListenableFuture<Integer> updateLocation(Integer id, String location);
+
+    @Query("UPDATE memo SET status=:status WHERE id = :id")
+    ListenableFuture<Integer> updateStatus(Integer id, Integer status);
 }

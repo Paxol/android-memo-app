@@ -33,4 +33,14 @@
     <string name="error_occurred_internet_connection">Si è verificato un errore\nVerifica la connessione a internet</string>
     <string name="no_empty_title">Il titolo non può essere vuoto</string>
     <string name="no_expiration">Seleziona una data di scadenza</string>
+    <string name="delete">Elimina</string>
+    <string name="mark_complete">Completato</string>
+    <string name="completed">Completato</string>
+    <string name="expired">Scaduto</string>
+    <string name="active">Attivo</string>
+    <string name="title_confirm_delete">Cancellare %1$s</string>
+    <string name="desc_confirm_delete">Sei sicuro di voler cancellare questo memo?</string>
+    <string name="deleted">Eliminato</string>
+    <string name="restored">Ripristinato</string>
+    <string name="not_completed">Non completato</string>
 </resources>
