@@ -34,6 +34,13 @@ import it.passolimirko.memorandum.utils.MemoUtils;
 
 public class MemosListFragment extends Fragment implements MenuProvider {
 
+    public static final int MODE_LIST = 0;
+    public static final int MODE_ACTIVE = 1;
+    public static final int MODE_COMPLETED = 2;
+    public static final int MODE_EXPIRED = 3;
+
+    private int selectedMode = -1;
+
     private FragmentMemosListBinding binding;
     private MemoAdapter adapter;
 
@@ -89,6 +96,8 @@ public class MemosListFragment extends Fragment implements MenuProvider {
 
     private void setupDefault() {
         // Show active memos
+        selectedMode = MODE_ACTIVE;
+
         // The toolbar title is setted by the navigation graph
 
         // Listen to room live data
@@ -99,8 +108,10 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     private void setupWithArgs(@NonNull Bundle args) {
         String title = getResources().getString(R.string.memos_list_fallback_title);
 
-        switch (args.getString("mode")) {
-            case "memos-list":
+        selectedMode = args.getInt("mode");
+
+        switch (selectedMode) {
+            case MODE_LIST:
                 // The list of memos is passed within the bundle
                 // Convert the array
                 Parcelable[] parcelableArray = args.getParcelableArray("memos");
@@ -116,9 +127,10 @@ public class MemosListFragment extends Fragment implements MenuProvider {
                 removeToolbarMenu();
                 break;
 
-            case "completed": // TODO: implement
-            case "expired": // TODO: implement
+            case MODE_COMPLETED: // TODO: implement
+            case MODE_EXPIRED: // TODO: implement
 
+            case MODE_ACTIVE:
             default:
                 // Fallback to setupDefault
                 setupDefault();
@@ -175,6 +187,21 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.menu_todos, menu);
+
+        switch (selectedMode) {
+            case MODE_LIST:
+                menu.removeGroup(R.id.group_memosStatuses);
+                break;
+            case MODE_ACTIVE:
+                menu.removeItem(R.id.action_showActiveMemos);
+                break;
+            case MODE_COMPLETED:
+                menu.removeItem(R.id.action_showCompletedMemos);
+                break;
+            case MODE_EXPIRED:
+                menu.removeItem(R.id.action_showExpiredMemos);
+                break;
+        }
     }
 
     @Override

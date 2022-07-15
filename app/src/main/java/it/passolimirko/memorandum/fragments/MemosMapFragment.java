@@ -121,7 +121,7 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
                     // Show the list of memos at the location
 
                     Bundle data = new Bundle();
-                    data.putString("mode", "memos-list");
+                    data.putInt("mode", MemosListFragment.MODE_LIST);
                     data.putParcelableArray("memos", memosForPosition.toArray(new Memo[0]));
 
                     NavHostFragment.findNavController(MemosMapFragment.this)

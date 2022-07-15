@@ -39,10 +39,6 @@
         android:name="it.passolimirko.memorandum.fragments.MemoDetailFragment"
         android:label="@string/memo_detail_fragment_label"
         tools:layout="@layout/fragment_memo_detail">
-
-        <action
-            android:id="@+id/action_MemoDetailFragment_to_MemosListFragment"
-            app:destination="@id/MemosListFragment" />
     </fragment>
 
     <fragment

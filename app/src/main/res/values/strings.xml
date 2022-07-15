@@ -43,4 +43,7 @@
     <string name="deleted">Eliminato</string>
     <string name="restored">Ripristinato</string>
     <string name="not_completed">Non completato</string>
+    <string name="show_completed">Mostra promemoria completati</string>
+    <string name="show_expired">Mostra promemoria scaduti</string>
+    <string name="show_active">Mostra promemoria attivi</string>
 </resources>
