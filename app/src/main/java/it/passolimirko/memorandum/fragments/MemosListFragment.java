@@ -110,6 +110,9 @@ public class MemosListFragment extends Fragment implements MenuProvider {
 
         selectedMode = args.getInt("mode");
 
+        // Gat activity to access toolbar
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
         switch (selectedMode) {
             case MODE_LIST:
                 // The list of memos is passed within the bundle
@@ -121,10 +124,14 @@ public class MemosListFragment extends Fragment implements MenuProvider {
                 }
 
                 // Set the adapter's list
-                setMemosList(Arrays.asList(resultArray));
+                setMemosList(Arrays.asList(resultArray != null ? resultArray : new Memo[0]));
 
                 // Remove menu
                 removeToolbarMenu();
+
+                // Show back arrow in toolbar
+                if (activity != null && activity.getSupportActionBar() != null)
+                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 break;
 
             case MODE_COMPLETED: // TODO: implement
@@ -137,7 +144,7 @@ public class MemosListFragment extends Fragment implements MenuProvider {
                 return;
         }
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        // Change toolbar title
         if (activity != null && activity.getSupportActionBar() != null)
             activity.getSupportActionBar().setTitle(title);
     }

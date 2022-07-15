@@ -20,7 +20,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -32,14 +32,16 @@
         <action
             android:id="@+id/action_MemosMapFragment_to_MemosListFragment"
             app:destination="@id/MemosListFragment" />
+        <action
+            android:id="@+id/action_MemosMapFragment_to_MemoDetailFragment"
+            app:destination="@id/MemoDetailFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/MemoDetailFragment"
         android:name="it.passolimirko.memorandum.fragments.MemoDetailFragment"
         android:label="@string/memo_detail_fragment_label"
-        tools:layout="@layout/fragment_memo_detail">
-    </fragment>
+        tools:layout="@layout/fragment_memo_detail" />
 
     <fragment
         android:id="@+id/AddMemoFragment"
@@ -53,7 +55,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment

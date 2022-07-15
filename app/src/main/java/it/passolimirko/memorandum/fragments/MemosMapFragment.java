@@ -1,7 +1,6 @@
 package it.passolimirko.memorandum.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,8 +126,13 @@ public class MemosMapFragment extends Fragment implements OnMapReadyCallback {
                     NavHostFragment.findNavController(MemosMapFragment.this)
                             .navigate(R.id.action_MemosMapFragment_to_MemosListFragment, data);
                 } else {
-                    // TODO: Show the memo details
-                    Log.i(TAG, "Show the memo details");
+                    // Show the details of the memo
+
+                    Bundle data = new Bundle();
+                    data.putParcelable(MemoDetailFragment.BUNDLE_MEMO_KEY, memosForPosition.get(0));
+
+                    NavHostFragment.findNavController(MemosMapFragment.this)
+                            .navigate(R.id.action_MemosMapFragment_to_MemoDetailFragment, data);
                 }
             }
         });
