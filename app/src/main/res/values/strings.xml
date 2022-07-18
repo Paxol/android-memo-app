@@ -48,4 +48,7 @@
     <string name="show_active">Mostra promemoria attivi</string>
     <string name="expired_memos">Promemoria scaduti</string>
     <string name="completed_memos">Promemoria completati</string>
+    <string name="no_memo">Non ci sono promemoria</string>
+    <string name="no_completed_memo">Non ci sono promemoria completati</string>
+    <string name="no_expired_memo">Non ci sono promemoria scaduti</string>
 </resources>

@@ -1,6 +1,5 @@
 package it.passolimirko.memorandum.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -47,33 +46,11 @@ public class MemosListFragment extends Fragment implements MenuProvider {
     private FragmentMemosListBinding binding;
     private MemoAdapter adapter;
 
-    @SuppressLint("SimpleDateFormat") // TODO: Test only
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        binding = FragmentMemosListBinding.inflate(inflater, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        // Setup the common things
-        commonSetup();
-
-        // Check if the fragment was created with arguments
-        if (getArguments() != null) {
-            setupWithArgs(getArguments());
-        } else {
-            selectedMode = MODE_ACTIVE;
-            setup(null);
-        }
-
-        return binding.getRoot();
-    }
-
-    public void commonSetup() {
-        // Setup recycler view
         adapter = new MemoAdapter(new ArrayList<>());
-        binding.activeMemoRw.setAdapter(adapter);
-        binding.activeMemoRw.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // When the user click on a memo
         adapter.setMemoClickListener((Memo memo) -> {
@@ -83,6 +60,55 @@ public class MemosListFragment extends Fragment implements MenuProvider {
             NavHostFragment.findNavController(MemosListFragment.this)
                     .navigate(R.id.action_MemosListFragment_to_MemoDetailFragment, data);
         });
+    }
+
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState
+    ) {
+        binding = FragmentMemosListBinding.inflate(inflater, container, false);
+
+        if (selectedMode == -1) {
+            // Setup never ran
+            // Check if the fragment was created with arguments
+            if (getArguments() != null) {
+                setupWithArgs(getArguments());
+            } else {
+                selectedMode = MODE_ACTIVE;
+                setup(null);
+            }
+        } else {
+            // Setup ran, the adapter is ok, but we need to update the toolbar title
+            String title;
+
+            switch (selectedMode) {
+                case MODE_LIST:
+                    title = getString(R.string.memos_list_fallback_title);
+                    break;
+                case MODE_COMPLETED:
+                    title = getString(R.string.completed_memos);
+                    break;
+
+                case MODE_EXPIRED:
+                    title = getString(R.string.expired_memos);
+                    break;
+
+                case MODE_ACTIVE:
+                default:
+                    title = getString(R.string.active_memos_fragment_label);
+                    break;
+            }
+
+            // Change toolbar title
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            if (activity != null && activity.getSupportActionBar() != null)
+                activity.getSupportActionBar().setTitle(title);
+        }
+
+        // Setup recycler view
+        binding.activeMemoRw.setAdapter(adapter);
+        binding.activeMemoRw.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Get the FAB from the activity
         if (getActivity() instanceof MainActivity) {
@@ -96,6 +122,8 @@ public class MemosListFragment extends Fragment implements MenuProvider {
 
         // Tell the activity that and options menu is available
         addToolbarMenu();
+
+        return binding.getRoot();
     }
 
     private void setLiveDataObserver(LiveData<List<Memo>> newObserver) {
@@ -124,7 +152,8 @@ public class MemosListFragment extends Fragment implements MenuProvider {
         switch (selectedMode) {
             case MODE_LIST:
                 // The list of memos is passed within the bundle
-                if (args == null) throw new IllegalArgumentException("Bundle args cannot be null in list mode");
+                if (args == null)
+                    throw new IllegalArgumentException("Bundle args cannot be null in list mode");
 
                 // Convert the array
                 Parcelable[] parcelableArray = args.getParcelableArray("memos");
@@ -205,6 +234,21 @@ public class MemosListFragment extends Fragment implements MenuProvider {
 
     private void updateNoMemosMessageVisibility() {
         if (binding.activeMemoRw.getAdapter() == null || binding.activeMemoRw.getAdapter().getItemCount() == 0) {
+            switch (selectedMode) {
+                case MODE_LIST:
+                    binding.tvNoActiveMemo.setText(R.string.no_memo);
+                    break;
+                case MODE_ACTIVE:
+                    binding.tvNoActiveMemo.setText(R.string.no_active_memo);
+                    break;
+                case MODE_COMPLETED:
+                    binding.tvNoActiveMemo.setText(R.string.no_completed_memo);
+                    break;
+                case MODE_EXPIRED:
+                    binding.tvNoActiveMemo.setText(R.string.no_expired_memo);
+                    break;
+            }
+
             binding.tvNoActiveMemo.setVisibility(View.VISIBLE);
         } else {
             binding.tvNoActiveMemo.setVisibility(View.GONE);
@@ -228,6 +272,11 @@ public class MemosListFragment extends Fragment implements MenuProvider {
             case MODE_EXPIRED:
                 menu.removeItem(R.id.action_showExpiredMemos);
                 break;
+        }
+
+        if (selectedMode != MODE_ACTIVE) {
+            // Show map option only for active memos
+            menu.removeItem(R.id.action_showMemosInMap);
         }
     }
 
