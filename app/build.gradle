@@ -38,10 +38,11 @@ android {
 dependencies {
     implementation 'androidx.room:room-runtime:2.4.2'
     implementation 'androidx.room:room-guava:2.4.2'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
 
     implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.5.0'

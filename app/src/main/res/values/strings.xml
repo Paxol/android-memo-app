@@ -26,7 +26,7 @@
     <string name="search">Cerca</string>
     <string name="choose_from_map">Scegli dalla mappa</string>
     <string name="select">Seleziona</string>
-    <string name="title_location_permission">Permessi di localizzazione</string>
+    <string name="title_location_permission">Permessi di localizzazione in background</string>
     <string name="text_location_permission">L\'app utilizza i permessi di locazione per inviarti una notifica quando sei in un luogo con un promemoria attivo</string>
     <string name="cancel">Annulla</string>
     <string name="no_results">Nessun risultato</string>
@@ -51,4 +51,11 @@
     <string name="no_memo">Non ci sono promemoria</string>
     <string name="no_completed_memo">Non ci sono promemoria completati</string>
     <string name="no_expired_memo">Non ci sono promemoria scaduti</string>
+    <string name="error_occurred">Si è verificato un errore</string>
+    <string name="details">Dettagli</string>
+    <string name="error_no_geofence_notifications">Non è stato possibile attivare le notifiche basate sulla posizione dei promemoria</string>
+    <string name="retry">Riprova</string>
+    <string name="notification_channel_name">Posizione vicino promemoria</string>
+    <string name="notification_channel_description">Notifiche di vicinanza a un promemoria</string>
+    <string name="inside_memo_area">Sei nell\'area di un promemoria</string>
 </resources>
